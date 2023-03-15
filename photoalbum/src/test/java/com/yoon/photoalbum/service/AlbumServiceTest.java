@@ -20,7 +20,7 @@ class AlbumServiceTest {
     AlbumService albumService;
 
     @Test
-    void getAlbum() {
+    void 앨범아이디로_앨범_정보_조회() {
 
         // 앨범 " 테스트 " 생성
         Album album = new Album();
@@ -29,5 +29,17 @@ class AlbumServiceTest {
 
         Album resAlbum = albumService.getAlbum(savedAlbum.getAlbumId());
         assertEquals("테스트", resAlbum.getAlbumName());
+    }
+
+    @Test
+    void 앨범명으로_앨범_정보_조회(){
+
+        // 앨범 " 테스트1 " 생성
+        Album album = new Album();
+        album.setAlbumName("테스트1");
+        Album savedAlbum = albumRepository.save(album);
+
+        Album resAlbum = albumService.getAlbumByName(savedAlbum.getAlbumName());
+        assertEquals("테스트1", resAlbum.getAlbumName());
     }
 }
