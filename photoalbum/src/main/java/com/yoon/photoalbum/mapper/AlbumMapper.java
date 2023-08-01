@@ -3,6 +3,9 @@ package com.yoon.photoalbum.mapper;
 import com.yoon.photoalbum.domain.Album;
 import com.yoon.photoalbum.dto.AlbumDto;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 public class AlbumMapper {
 
     public static AlbumDto convertToDto(Album album) {
@@ -19,5 +22,9 @@ public class AlbumMapper {
         album.setAlbumName(albumDto.getAlbumName());
         album.setCreatedAt(albumDto.getCreatedAt());
         return album;
+    }
+
+    public static List<AlbumDto> convertToDtoList(List<Album> albums) {
+        return albums.stream().map(AlbumMapper::convertToDto).collect(Collectors.toList());
     }
 }

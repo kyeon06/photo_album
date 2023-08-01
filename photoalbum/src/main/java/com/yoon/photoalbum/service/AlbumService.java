@@ -2,6 +2,7 @@ package com.yoon.photoalbum.service;
 
 import com.yoon.photoalbum.Constants;
 import com.yoon.photoalbum.domain.Album;
+import com.yoon.photoalbum.domain.Photo;
 import com.yoon.photoalbum.dto.AlbumDto;
 import com.yoon.photoalbum.mapper.AlbumMapper;
 import com.yoon.photoalbum.repository.AlbumRepository;
@@ -13,7 +14,10 @@ import javax.persistence.EntityNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class AlbumService {
@@ -66,5 +70,29 @@ public class AlbumService {
     private void createAlbumDirectories(Album album) throws IOException {
         Files.createDirectories(Paths.get(Constants.PATH_PREFIX + "/photos/original/" + album.getAlbumId()));
         Files.createDirectories(Paths.get(Constants.PATH_PREFIX + "/photos/thumb/" + album.getAlbumId()));
+    }
+
+    // 앨범 목록 조회
+    public List<AlbumDto> getAlbumList(String sort, String keyword) {
+        List<Album> albums;
+
+        if (Objects.equals(sort, "byName")) {
+            albums = albumRepository.findByAlbumNameContainingOrderByAlbumNameAsc(keyword);
+        } else if (Objects.equals(sort, "byDate")) {
+            albums = albumRepository.findByAlbumNameContainingOrderByCreatedAtDesc(keyword);
+        } else {
+            throw new IllegalArgumentException("알 수 없는 정렬 기준입니다.");
+        }
+
+        // Model -> DTO 변환
+        List<AlbumDto> albumDtos = AlbumMapper.convertToDtoList(albums);
+
+        // 앨범 별로 최신 4장의 thumbUrls 저장
+        for (AlbumDto albumDto : albumDtos) {
+            List<Photo> top4 = photoRepository.findTop4ByAlbum_AlbumIdOrderByUploadedAtDesc(albumDto.getAlbumId());
+            albumDto.setThumbUrls(top4.stream().map(Photo::getThumbUrl).map(c -> Constants.PATH_PREFIX + c).collect(Collectors.toList()));
+        }
+
+        return albumDtos;
     }
 }
