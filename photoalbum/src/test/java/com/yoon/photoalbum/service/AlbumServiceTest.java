@@ -1,8 +1,10 @@
 package com.yoon.photoalbum.service;
 
+import com.yoon.photoalbum.Constants;
 import com.yoon.photoalbum.domain.Album;
 import com.yoon.photoalbum.domain.Photo;
 import com.yoon.photoalbum.dto.AlbumDto;
+import com.yoon.photoalbum.mapper.AlbumMapper;
 import com.yoon.photoalbum.repository.AlbumRepository;
 import com.yoon.photoalbum.repository.PhotoRepository;
 import org.junit.jupiter.api.Assertions;
@@ -12,6 +14,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
+
+import java.io.File;
+import java.io.IOException;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
@@ -80,5 +85,21 @@ class AlbumServiceTest {
         photoRepository.save(photo1);
 
         assertThat(photoRepository.countByAlbum_AlbumId(savedAlbum.getAlbumId())).isEqualTo(1);
+    }
+
+    @Test
+    void 앨범_생성_테스트() throws IOException {
+        AlbumDto albumDto = new AlbumDto();
+        albumDto.setAlbumName("생성 테스트");
+
+        AlbumDto savedAlbum = albumService.createAlbum(albumDto);
+
+        assertThat(savedAlbum.getAlbumName()).isEqualTo("생성 테스트");
+
+        // 테스트로 인해 생성된 폴더 삭제하기
+        File folder1 = new File(Constants.PATH_PREFIX + "/photos/original/" + savedAlbum.getAlbumId());
+        File folder2 = new File(Constants.PATH_PREFIX + "/photos/thumb/" + savedAlbum.getAlbumId());
+        folder1.delete();
+        folder2.delete();
     }
 }
