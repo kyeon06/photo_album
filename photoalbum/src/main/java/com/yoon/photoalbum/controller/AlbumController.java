@@ -5,10 +5,7 @@ import com.yoon.photoalbum.service.AlbumService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/albums")
@@ -22,6 +19,18 @@ public class AlbumController {
         // albumId에 해당하는 album 정보 가져오기
         AlbumDto album = albumService.getAlbum(albumId);
         // json 형식으로 200 코드와 함께 반환한다.
+        return new ResponseEntity<>(album, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/query", method = RequestMethod.GET)
+    public ResponseEntity<AlbumDto> getAlbumByQuery(@RequestParam(value = "albumId") final long albumId) {
+        AlbumDto album = albumService.getAlbum(albumId);
+        return new ResponseEntity<>(album, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/json_body", method = RequestMethod.POST)
+    public ResponseEntity<AlbumDto> getAlbumByJson(@RequestBody final AlbumDto albumDto) {
+        AlbumDto album = albumService.getAlbum(albumDto.getAlbumId());
         return new ResponseEntity<>(album, HttpStatus.OK);
     }
 }
