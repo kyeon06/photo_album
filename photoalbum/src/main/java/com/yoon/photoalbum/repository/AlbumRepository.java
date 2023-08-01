@@ -12,11 +12,10 @@ public interface AlbumRepository extends JpaRepository<Album, Long> {
 
     Optional<Album> findByAlbumName(String name);
 
-    // 앨범명 검색 + 생성날짜 최신순
-    List<Album> findByAlbumNameContainingOrderByCreatedAtDesc(String keyword);
+    List<Album> findByAlbumNameContainingOrderByCreatedAtAsc(String keyword); // 앨범명 검색 + 생성날짜 오래된순
+    List<Album> findByAlbumNameContainingOrderByCreatedAtDesc(String keyword); // 앨범명 검색 + 생성날짜 최신순
 
-    // 앨범명 검색 + 앨범명 A-Z 정렬
-    List<Album> findByAlbumNameContainingOrderByAlbumNameAsc(String keyword);
-
+    List<Album> findByAlbumNameContainingOrderByAlbumNameAsc(String keyword); // 앨범명 검색 + 앨범명 A-Z 정렬
+    List<Album> findByAlbumNameContainingOrderByAlbumNameDesc(String keyword); // 앨범명 검색 + 앨범명 Z-A 정렬
 
 }

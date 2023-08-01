@@ -73,13 +73,25 @@ public class AlbumService {
     }
 
     // 앨범 목록 조회
-    public List<AlbumDto> getAlbumList(String sort, String keyword) {
+    public List<AlbumDto> getAlbumList(String sort, String keyword, String orderBy) {
         List<Album> albums;
 
         if (Objects.equals(sort, "byName")) {
-            albums = albumRepository.findByAlbumNameContainingOrderByAlbumNameAsc(keyword);
+            if (Objects.equals(orderBy, "asc")) {
+                albums = albumRepository.findByAlbumNameContainingOrderByAlbumNameAsc(keyword);
+            } else if (Objects.equals(orderBy, "desc")){
+                albums = albumRepository.findByAlbumNameContainingOrderByAlbumNameDesc(keyword);
+            } else {
+                throw new IllegalArgumentException("알 수 없는 정렬 기준입니다.");
+            }
         } else if (Objects.equals(sort, "byDate")) {
-            albums = albumRepository.findByAlbumNameContainingOrderByCreatedAtDesc(keyword);
+            if (Objects.equals(orderBy, "asc")) {
+                albums = albumRepository.findByAlbumNameContainingOrderByCreatedAtAsc(keyword);
+            } else if (Objects.equals(orderBy, "desc")){
+                albums = albumRepository.findByAlbumNameContainingOrderByCreatedAtDesc(keyword);
+            } else {
+                throw new IllegalArgumentException("알 수 없는 정렬 기준입니다.");
+            }
         } else {
             throw new IllegalArgumentException("알 수 없는 정렬 기준입니다.");
         }

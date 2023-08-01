@@ -48,8 +48,9 @@ public class AlbumController {
     // 앨범 목록 조회 API
     @RequestMapping(value = "", method = RequestMethod.GET)
     public ResponseEntity<List<AlbumDto>> getAlbumList(@RequestParam(value = "sort", required = false, defaultValue = "byDate") final String sort,
-                                                       @RequestParam(value = "keyword", required = false, defaultValue = "") final String keyword) {
-        List<AlbumDto> albumDtos = albumService.getAlbumList(sort, keyword);
+                                                       @RequestParam(value = "keyword", required = false, defaultValue = "") final String keyword,
+                                                       @RequestParam(value = "orderBy", required = false, defaultValue = "desc") final String orderBy) {
+        List<AlbumDto> albumDtos = albumService.getAlbumList(sort, keyword, orderBy);
         return new ResponseEntity<>(albumDtos, HttpStatus.OK);
     }
 }
