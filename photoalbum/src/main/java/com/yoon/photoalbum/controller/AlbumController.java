@@ -7,6 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+
 @RestController
 @RequestMapping("/albums")
 public class AlbumController {
@@ -14,6 +16,7 @@ public class AlbumController {
     @Autowired
     AlbumService albumService;
 
+    // 앨범 조회 API
     @RequestMapping(value = "/{albumId}", method = RequestMethod.GET)
     public ResponseEntity<AlbumDto> getAlbum(@PathVariable("albumId") final long albumId) {
         // albumId에 해당하는 album 정보 가져오기
@@ -32,5 +35,12 @@ public class AlbumController {
     public ResponseEntity<AlbumDto> getAlbumByJson(@RequestBody final AlbumDto albumDto) {
         AlbumDto album = albumService.getAlbum(albumDto.getAlbumId());
         return new ResponseEntity<>(album, HttpStatus.OK);
+    }
+
+    // 앨범 생성 API
+    @RequestMapping(value = "", method = RequestMethod.POST)
+    public  ResponseEntity<AlbumDto> createAlbum(@RequestBody final AlbumDto albumDto) throws IOException {
+        AlbumDto savedAlbumDto = albumService.createAlbum(albumDto);
+        return new ResponseEntity<>(savedAlbumDto, HttpStatus.OK);
     }
 }
