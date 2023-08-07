@@ -53,4 +53,11 @@ public class AlbumController {
         List<AlbumDto> albumDtos = albumService.getAlbumList(sort, keyword, orderBy);
         return new ResponseEntity<>(albumDtos, HttpStatus.OK);
     }
+
+    // 앨범명 변경 API
+//    @RequestMapping(value = "/{albumId}", method = RequestMethod.PUT)
+//    public ResponseEntity<AlbumDto> updateAlbum(@PathVariable("albumId") final long albumId,
+//                                                @RequestBody final AlbumDto albumDto) {
+//
+//    }
 }
