@@ -61,4 +61,11 @@ public class AlbumController {
         AlbumDto res = albumService.changeAlbumName(albumId, albumDto);
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
+
+    // 앨범 삭제 API
+    @RequestMapping(value = "/{albumId}", method = RequestMethod.DELETE)
+    public ResponseEntity<String> deletePhoto(@PathVariable("albumId") final long albumId) {
+        String res = albumService.deleteAlbum(albumId);
+        return new ResponseEntity<>(res, HttpStatus.OK);
+    }
 }

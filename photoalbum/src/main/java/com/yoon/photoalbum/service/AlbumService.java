@@ -124,4 +124,19 @@ public class AlbumService {
 
         return AlbumMapper.convertToDto(savedAlbum);
     }
+
+    // 앨범 삭제
+    public String deleteAlbum(Long albumId) {
+        // albumId로 기존 앨범 정보 불러오기
+        Optional<Album> album = this.albumRepository.findById(albumId);
+        // 앨범 정보가 없는 경우 예외처리
+        if (album.isEmpty()) {
+            throw new NoSuchElementException(String.format("Album ID '%d'가 존재하지 않습니다.", albumId));
+        }
+
+        Album delAlbum = album.get();
+        this.albumRepository.delete(delAlbum);
+
+        return "{\"message\" : \"앨범삭제가 완료되었습니다.\"}";
+    }
 }
