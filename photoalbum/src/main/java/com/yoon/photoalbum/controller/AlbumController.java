@@ -55,9 +55,10 @@ public class AlbumController {
     }
 
     // 앨범명 변경 API
-//    @RequestMapping(value = "/{albumId}", method = RequestMethod.PUT)
-//    public ResponseEntity<AlbumDto> updateAlbum(@PathVariable("albumId") final long albumId,
-//                                                @RequestBody final AlbumDto albumDto) {
-//
-//    }
+    @RequestMapping(value = "/{albumId}", method = RequestMethod.PUT)
+    public ResponseEntity<AlbumDto> updateAlbum(@PathVariable("albumId") final long albumId,
+                                                @RequestBody final AlbumDto albumDto) {
+        AlbumDto res = albumService.changeAlbumName(albumId, albumDto);
+        return new ResponseEntity<>(res, HttpStatus.OK);
+    }
 }
