@@ -126,4 +126,22 @@ class AlbumServiceTest {
         folder1.delete();
         folder2.delete();
     }
+
+    @Test
+    void 앨범_삭제_테스트() throws IOException {
+        // 앨범 생성
+        AlbumDto albumDto = new AlbumDto();
+        albumDto.setAlbumName("삭제전");
+        AlbumDto res = albumService.createAlbum(albumDto);
+
+        albumService.deleteAlbum(res.getAlbumId());
+
+        assertEquals(6, albumRepository.count());
+
+        // 테스트로 인해 생성된 폴더 삭제하기
+        File folder1 = new File(Constants.PATH_PREFIX + "/photos/original/" + res.getAlbumId());
+        File folder2 = new File(Constants.PATH_PREFIX + "/photos/thumb/" + res.getAlbumId());
+        folder1.delete();
+        folder2.delete();
+    }
 }
