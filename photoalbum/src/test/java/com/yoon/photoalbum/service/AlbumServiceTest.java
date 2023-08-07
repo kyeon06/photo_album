@@ -102,4 +102,28 @@ class AlbumServiceTest {
         folder1.delete();
         folder2.delete();
     }
+
+    @Test
+    void 앨범명_변경_테스트() throws IOException {
+        // 앨범 생성
+        AlbumDto albumDto = new AlbumDto();
+        albumDto.setAlbumName("변경전");
+        AlbumDto res = albumService.createAlbum(albumDto);
+
+        Long albumId = res.getAlbumId();
+        AlbumDto updateDto = new AlbumDto();
+        updateDto.setAlbumName("변경후");
+        albumService.changeAlbumName(albumId, updateDto);
+
+        AlbumDto updatedDto = albumService.getAlbum(albumId);
+
+        // 앨범명이 변경 되었는지 확인
+        assertEquals("변경후", updatedDto.getAlbumName());
+
+        // 테스트로 인해 생성된 폴더 삭제하기
+        File folder1 = new File(Constants.PATH_PREFIX + "/photos/original/" + updatedDto.getAlbumId());
+        File folder2 = new File(Constants.PATH_PREFIX + "/photos/thumb/" + updatedDto.getAlbumId());
+        folder1.delete();
+        folder2.delete();
+    }
 }
