@@ -1,0 +1,25 @@
+package com.yoon.photoalbum.controller;
+
+import com.yoon.photoalbum.dto.PhotoDto;
+import com.yoon.photoalbum.service.PhotoService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("/albums/{albumId}/photos")
+public class PhotoController {
+
+    @Autowired
+    private PhotoService photoService;
+
+    @RequestMapping(value = "/{photoId}", method = RequestMethod.GET)
+    public ResponseEntity<PhotoDto> getPhotoInfo(@PathVariable("photoId") final long photoId) {
+        PhotoDto res = photoService.getPhoto(photoId);
+        return new ResponseEntity<>(res, HttpStatus.OK);
+    }
+}
