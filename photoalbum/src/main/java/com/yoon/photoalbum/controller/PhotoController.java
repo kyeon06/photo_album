@@ -59,7 +59,6 @@ public class PhotoController {
     }
 
     // 사진 목록 조회 API
-    // 앨범 목록 조회 API
     @RequestMapping(value = "", method = RequestMethod.GET)
     public ResponseEntity<List<PhotoDto>> getPhotoList(@PathVariable("albumId") final long albumId,
                                                        @RequestParam(value = "sort", required = false, defaultValue = "byDate") final String sort,

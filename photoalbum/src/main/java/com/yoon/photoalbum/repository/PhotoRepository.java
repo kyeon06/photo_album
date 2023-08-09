@@ -18,8 +18,6 @@ public interface PhotoRepository extends JpaRepository<Photo, Long> {
     // 같은 파일명이 존재하는지 체크하는 method
     Optional<Photo> findByFileNameAndAlbum_AlbumId(String photoName, Long albumId);
 
-    List<Photo> findByAlbumIdAndFileNameContainingOrderByUploadedAtDesc(Long albumId, String keyword); // 사진 업로드 최신순 정렬
-    List<Photo> findByAlbumIdAndFileNameContainingOrderByFileNameAsc(Long albumId, String keyword); // 파일명 A-Z 정렬
-//    List<Photo> findByAlbumAndFileNameContainingOrderByUploadedAtDesc(Album album, String keyword); // 사진 업로드 최신순 정렬
-//    List<Photo> findByAlbumAndFileNameContainingOrderByFileNameAsc(Album album, String keyword); // 파일명 A-Z 정렬
+    List<Photo> findByAlbumAndFileNameContainingOrderByUploadedAtDesc(Album album, String keyword); // 사진 업로드 최신순 정렬
+    List<Photo> findByAlbumAndFileNameContainingOrderByFileNameAsc(Album album, String keyword); // 파일명 A-Z 정렬
 }

@@ -128,11 +128,9 @@ public class PhotoService {
         List<Photo> photos;
 
         if (Objects.equals(sort, "byName")) {
-            photos = photoRepository.findByAlbumIdAndFileNameContainingOrderByFileNameAsc(albumId, keyword);
-//            photos = photoRepository.findByAlbumAndFileNameContainingOrderByFileNameAsc(album.get(), keyword);
+            photos = photoRepository.findByAlbumAndFileNameContainingOrderByFileNameAsc(album.get(), keyword);
         } else if (Objects.equals(sort, "byDate")) {
-            photos = photoRepository.findByAlbumIdAndFileNameContainingOrderByUploadedAtDesc(albumId, keyword);
-//            photos = photoRepository.findByAlbumAndFileNameContainingOrderByUploadedAtDesc(album.get(), keyword);
+            photos = photoRepository.findByAlbumAndFileNameContainingOrderByUploadedAtDesc(album.get(), keyword);
         } else {
             throw new IllegalArgumentException("알 수 없는 정렬 기준입니다.");
         }
