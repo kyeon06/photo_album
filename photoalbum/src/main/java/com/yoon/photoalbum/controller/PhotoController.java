@@ -1,5 +1,6 @@
 package com.yoon.photoalbum.controller;
 
+import com.yoon.photoalbum.dto.AlbumDto;
 import com.yoon.photoalbum.dto.PhotoDto;
 import com.yoon.photoalbum.service.PhotoService;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
@@ -55,5 +56,15 @@ public class PhotoController {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    // 사진 목록 조회 API
+    // 앨범 목록 조회 API
+    @RequestMapping(value = "", method = RequestMethod.GET)
+    public ResponseEntity<List<PhotoDto>> getPhotoList(@PathVariable("albumId") final long albumId,
+                                                       @RequestParam(value = "sort", required = false, defaultValue = "byDate") final String sort,
+                                                       @RequestParam(value = "keyword", required = false, defaultValue = "") final String keyword) {
+        List<PhotoDto> photoDtos = photoService.getPhotoList(albumId, sort, keyword);
+        return new ResponseEntity<>(photoDtos, HttpStatus.OK);
     }
 }

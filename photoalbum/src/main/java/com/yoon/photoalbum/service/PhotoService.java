@@ -3,6 +3,7 @@ package com.yoon.photoalbum.service;
 import com.yoon.photoalbum.Constants;
 import com.yoon.photoalbum.domain.Album;
 import com.yoon.photoalbum.domain.Photo;
+import com.yoon.photoalbum.dto.AlbumDto;
 import com.yoon.photoalbum.dto.PhotoDto;
 import com.yoon.photoalbum.mapper.PhotoMapper;
 import com.yoon.photoalbum.repository.AlbumRepository;
@@ -20,6 +21,8 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -117,5 +120,25 @@ public class PhotoService {
         }
 
         return new File(Constants.PATH_PREFIX + res.get().getOriginalUrl());
+    }
+
+    // 사진 목록 불러오기
+    public List<PhotoDto> getPhotoList(Long albumId, String sort, String keyword) {
+        Optional<Album> album = albumRepository.findById(albumId);
+        List<Photo> photos;
+
+        if (Objects.equals(sort, "byName")) {
+            photos = photoRepository.findByAlbumIdAndFileNameContainingOrderByFileNameAsc(albumId, keyword);
+//            photos = photoRepository.findByAlbumAndFileNameContainingOrderByFileNameAsc(album.get(), keyword);
+        } else if (Objects.equals(sort, "byDate")) {
+            photos = photoRepository.findByAlbumIdAndFileNameContainingOrderByUploadedAtDesc(albumId, keyword);
+//            photos = photoRepository.findByAlbumAndFileNameContainingOrderByUploadedAtDesc(album.get(), keyword);
+        } else {
+            throw new IllegalArgumentException("알 수 없는 정렬 기준입니다.");
+        }
+
+        List<PhotoDto> photoDtos = PhotoMapper.convertToDtoList(photos);
+
+        return photoDtos;
     }
 }
