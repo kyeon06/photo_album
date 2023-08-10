@@ -4,6 +4,7 @@ import com.yoon.photoalbum.Constants;
 import com.yoon.photoalbum.domain.Album;
 import com.yoon.photoalbum.domain.Photo;
 import com.yoon.photoalbum.dto.AlbumDto;
+import com.yoon.photoalbum.dto.MoveRequestBody;
 import com.yoon.photoalbum.dto.PhotoDto;
 import com.yoon.photoalbum.mapper.PhotoMapper;
 import com.yoon.photoalbum.repository.AlbumRepository;
@@ -22,6 +23,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -138,5 +140,34 @@ public class PhotoService {
         List<PhotoDto> photoDtos = PhotoMapper.convertToDtoList(photos);
 
         return photoDtos;
+    }
+
+    // 사진 앨범 옮기기
+    public List<PhotoDto> movePhoto(MoveRequestBody moveRequestBody) {
+        Optional<Album> fromAlbum = albumRepository.findById(moveRequestBody.getFromAlbumId());
+        Optional<Album> toAlbum = albumRepository.findById(moveRequestBody.getToAlbumId());
+
+        if (fromAlbum.isEmpty()) {
+            throw new NoSuchElementException(String.format("앨범 ID %d를 찾을 수 없습니다.", moveRequestBody.getFromAlbumId()));
+        }
+        if (toAlbum.isEmpty()) {
+            throw new NoSuchElementException(String.format("앨범 ID %d를 찾을 수 없습니다.", moveRequestBody.getToAlbumId()));
+        }
+
+        // 앨범에 해당하는 사진 목록 불러오기
+        List<Photo> photos = photoRepository.findByAlbum_AlbumId(moveRequestBody.getFromAlbumId());
+        List<Long> photoIds = List.of(moveRequestBody.getPhotoIds());
+
+        // 앨범 변경
+        for (Photo photo : photos) {
+            if (photoIds.contains(photo.getPhotoId())) {
+                photo.setAlbum(toAlbum.get());
+                photoRepository.save(photo);
+            }
+        }
+
+        // 제외한 목록 다시 불러오기
+        List<Photo> resphotos = photoRepository.findByAlbum_AlbumId(moveRequestBody.getFromAlbumId());
+        return PhotoMapper.convertToDtoList(resphotos);
     }
 }

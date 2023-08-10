@@ -1,6 +1,7 @@
 package com.yoon.photoalbum.controller;
 
 import com.yoon.photoalbum.dto.AlbumDto;
+import com.yoon.photoalbum.dto.MoveRequestBody;
 import com.yoon.photoalbum.dto.PhotoDto;
 import com.yoon.photoalbum.service.PhotoService;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
@@ -66,4 +67,12 @@ public class PhotoController {
         List<PhotoDto> photoDtos = photoService.getPhotoList(albumId, sort, keyword);
         return new ResponseEntity<>(photoDtos, HttpStatus.OK);
     }
+
+    // 사진 앨범 옮기기 API
+    @RequestMapping(value = "/move", method = RequestMethod.PUT)
+    public ResponseEntity<List<PhotoDto>> movePhotoAlbum(@RequestBody final MoveRequestBody moveRequestBody) {
+        List<PhotoDto> photoDtos = photoService.movePhoto(moveRequestBody);
+        return new ResponseEntity<>(photoDtos, HttpStatus.OK);
+    }
+
 }

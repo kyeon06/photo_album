@@ -1,4 +1,4 @@
-package com.yoon.photoalbum.service;
+package com.yoon.photoalbum.repository;
 
 import com.yoon.photoalbum.domain.Album;
 import com.yoon.photoalbum.repository.AlbumRepository;

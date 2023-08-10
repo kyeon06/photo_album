@@ -20,4 +20,6 @@ public interface PhotoRepository extends JpaRepository<Photo, Long> {
 
     List<Photo> findByAlbumAndFileNameContainingOrderByUploadedAtDesc(Album album, String keyword); // 사진 업로드 최신순 정렬
     List<Photo> findByAlbumAndFileNameContainingOrderByFileNameAsc(Album album, String keyword); // 파일명 A-Z 정렬
+
+    List<Photo> findByAlbum_AlbumId(Long albumId);
 }
