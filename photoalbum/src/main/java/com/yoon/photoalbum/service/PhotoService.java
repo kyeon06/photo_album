@@ -4,6 +4,7 @@ import com.yoon.photoalbum.Constants;
 import com.yoon.photoalbum.domain.Album;
 import com.yoon.photoalbum.domain.Photo;
 import com.yoon.photoalbum.dto.AlbumDto;
+import com.yoon.photoalbum.dto.DeleteRequestBody;
 import com.yoon.photoalbum.dto.MoveRequestBody;
 import com.yoon.photoalbum.dto.PhotoDto;
 import com.yoon.photoalbum.mapper.PhotoMapper;
@@ -156,11 +157,11 @@ public class PhotoService {
 
         // 앨범에 해당하는 사진 목록 불러오기
         List<Photo> photos = photoRepository.findByAlbum_AlbumId(moveRequestBody.getFromAlbumId());
-        List<Long> photoIds = List.of(moveRequestBody.getPhotoIds());
+        List<Long> movePhotoIds = List.of(moveRequestBody.getPhotoIds());
 
         // 앨범 변경
         for (Photo photo : photos) {
-            if (photoIds.contains(photo.getPhotoId())) {
+            if (movePhotoIds.contains(photo.getPhotoId())) {
                 photo.setAlbum(toAlbum.get());
                 photoRepository.save(photo);
             }
@@ -169,5 +170,27 @@ public class PhotoService {
         // 제외한 목록 다시 불러오기
         List<Photo> resphotos = photoRepository.findByAlbum_AlbumId(moveRequestBody.getFromAlbumId());
         return PhotoMapper.convertToDtoList(resphotos);
+    }
+
+    // 사진 삭제
+    public List<PhotoDto> deletePhoto(Long albumId, DeleteRequestBody requestBody) {
+        Optional<Album> album = albumRepository.findById(albumId);
+        if (album.isEmpty()) {
+            throw new NoSuchElementException(String.format("앨범 ID %d를 찾을 수 없습니다.", albumId));
+        }
+
+        // 앨범 내 사직 목록
+        List<Photo> photos = photoRepository.findByAlbum_AlbumId(albumId);
+        // 삭제할 사진 목록 ID
+        List<Long> deletePhotoIds = List.of(requestBody.getPhotoIds());
+
+        for (Photo photo : photos) {
+            if (deletePhotoIds.contains(photo.getPhotoId())) {
+                photoRepository.delete(photo);
+            }
+        }
+
+        List<Photo> resPhotos = photoRepository.findByAlbum_AlbumId(albumId);
+        return PhotoMapper.convertToDtoList(resPhotos);
     }
 }

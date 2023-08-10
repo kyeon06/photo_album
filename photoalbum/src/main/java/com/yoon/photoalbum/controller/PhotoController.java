@@ -1,6 +1,6 @@
 package com.yoon.photoalbum.controller;
 
-import com.yoon.photoalbum.dto.AlbumDto;
+import com.yoon.photoalbum.dto.DeleteRequestBody;
 import com.yoon.photoalbum.dto.MoveRequestBody;
 import com.yoon.photoalbum.dto.PhotoDto;
 import com.yoon.photoalbum.service.PhotoService;
@@ -70,8 +70,16 @@ public class PhotoController {
 
     // 사진 앨범 옮기기 API
     @RequestMapping(value = "/move", method = RequestMethod.PUT)
-    public ResponseEntity<List<PhotoDto>> movePhotoAlbum(@RequestBody final MoveRequestBody moveRequestBody) {
-        List<PhotoDto> photoDtos = photoService.movePhoto(moveRequestBody);
+    public ResponseEntity<List<PhotoDto>> movePhotoAlbum(@RequestBody final MoveRequestBody requestBody) {
+        List<PhotoDto> photoDtos = photoService.movePhoto(requestBody);
+        return new ResponseEntity<>(photoDtos, HttpStatus.OK);
+    }
+
+    // 사진 삭제 API
+    @RequestMapping(value = "", method = RequestMethod.DELETE)
+    public ResponseEntity<List<PhotoDto>> deletePhoto(@PathVariable("albumId") final long albumId,
+                                                      @RequestBody final DeleteRequestBody requestBody) {
+        List<PhotoDto> photoDtos = photoService.deletePhoto(albumId, requestBody);
         return new ResponseEntity<>(photoDtos, HttpStatus.OK);
     }
 
